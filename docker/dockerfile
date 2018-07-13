@@ -1,0 +1,14 @@
+FROM python:3.6
+
+MAINTAINER Guifa Li
+
+RUN apt-get update -y && \
+	apt-get install nginx -y
+
+COPY ./docker-nginx-conf /etc/nginx/sites-available/default
+
+WORKDIR /apps/
+
+CMD ["/bin/bash"]
+
+EXPOSE 8083:8083

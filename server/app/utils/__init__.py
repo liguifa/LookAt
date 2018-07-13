@@ -1,1 +1,1 @@
-from .passwordHelper import PasswordHelper
+from .passwordHelper import PasswordHelper  # NOQA

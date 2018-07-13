@@ -1,5 +1,5 @@
 from . import user
 
 blueprints = [
-	user.user_bp
+    user.user_bp
 ]

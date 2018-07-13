@@ -1,0 +1,10 @@
+[Unit]
+Description=lookat
+
+[Service]
+Type=simple
+PIDFile=/var/run/lookat/lookat.pid
+ExecStart=/apps/venv/bin/gunicorn --error-logfile - --access-logfile - -w 2 -k gevent --timeout 300 -b 0.0.0.0:8088 --limit-request-line 0 --limit-request-field_size 0 app:app
+
+[Install]
+WantedBy=multi-user.target

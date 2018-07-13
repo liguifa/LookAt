@@ -1,1 +1,1 @@
-from .serviceFactory import ServiceFactory
+from .serviceFactory import ServiceFactory  # NOQA
