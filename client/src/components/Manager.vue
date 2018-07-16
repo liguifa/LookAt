@@ -2,73 +2,59 @@
 	<div class="manager-page">
 		<div class="manager-page-header">
 			<Menu mode="horizontal" :theme="'dark'" active-name="1">
-				<MenuItem name="1">
+				<MenuItem v-for="menu in topmenus" :name="menu.display_name" :key="menu.id">
 					<Icon type="ios-paper"></Icon>
-					内容管理
-				</MenuItem>
-				<MenuItem name="2">
-					<Icon type="ios-people"></Icon>
-					用户管理
-				</MenuItem>
-				<Submenu name="3">
-					<template slot="title">
-						<Icon type="stats-bars"></Icon>
-						统计分析
-					</template>
-					<MenuGroup title="使用">
-						<MenuItem name="3-1">新增和启动</MenuItem>
-						<MenuItem name="3-2">活跃分析</MenuItem>
-						<MenuItem name="3-3">时段分析</MenuItem>
-					</MenuGroup>
-					<MenuGroup title="xx">
-						<MenuItem name="3-4">xxxxx</MenuItem>
-						<MenuItem name="3-5">xxxxxx</MenuItem>
-					</MenuGroup>
-				</Submenu>
-				<MenuItem name="4">
-					<Icon type="settings"></Icon>
-					综合设置
+					{{menu.display_name}}
 				</MenuItem>
 			</Menu>
 		</div>
 		<div class="manager-page-body">
 			<Menu :theme="'dark'">
-                <Submenu name="1">
+                <Submenu v-for="menu in sideMenus" :key="menu.id" :name="menu.display_name">
                     <template slot="title">
                         <Icon type="ios-paper"></Icon>
-                        内容管理
+                        {{menu.display_name}}
                     </template>
-                    <MenuItem name="1-1">文章管理</MenuItem>
-                    <MenuItem name="1-2">评论管理</MenuItem>
-                    <MenuItem name="1-3">举报管理</MenuItem>
-                </Submenu>
-                <Submenu name="2">
-                    <template slot="title">
-                        <Icon type="ios-people"></Icon>
-                        用户管理
-                    </template>
-                    <MenuItem name="2-1">新增用户</MenuItem>
-                    <MenuItem name="2-2">活跃用户</MenuItem>
-                </Submenu>
-                <Submenu name="3">
-                    <template slot="title">
-                        <Icon type="stats-bars"></Icon>
-                        统计分析
-                    </template>
-                    <MenuGroup title="使用">
-                        <MenuItem name="3-1">新增和启动</MenuItem>
-                        <MenuItem name="3-2">活跃分析</MenuItem>
-                        <MenuItem name="3-3">时段分析</MenuItem>
-                    </MenuGroup>
-                    <MenuGroup title="留存">
-                        <MenuItem name="3-4">用户留存</MenuItem>
-                        <MenuItem name="3-5">流失用户</MenuItem>
-                    </MenuGroup>
+                    <MenuItem v-for="sub in menu.sub_menus" :key="sub.id" :name="sub.display_name">{{sub.display_name}}</MenuItem>
                 </Submenu>
             </Menu>
+			<div class="manager-content">
+				<lookat-images></lookat-images>
+			</div>
 		</div>
 	</div>
 </template>
+
+<script>
+import Images from "./Images.vue"
+
+export default {
+	data(){
+		return {
+			topmenus:[],
+			activeMenuId:0
+		}
+	},
+	asyncComputed:{
+		async sideMenus(){
+			if(this.activeMenuId != 0){
+				let response = await this.Axios.get(`/api/common/side_menus/${this.activeMenuId}`);
+				return response.data
+			}
+		}
+	},
+	mounted(){
+		this.Axios.get("/api/common/top_menus").then(response=>{
+			this.topmenus = response.data
+			this.activeMenuId = this.topmenus[0].id
+		})
+	},
+	components:{
+		"lookat-images" : Images
+	}
+}
+</script>
+
 
 <style>
 .manager-page{
@@ -91,9 +77,18 @@
 	flex-grow: 1;
 	flex-shrink: 1;
 	height: calc(100% - 60px);
+	display: flex;
 }
 
 .manager-page-body > ul{
 	height: 100%;
+	flex-shrink: 0;
+}
+
+.manager-content{
+	flex-grow: 1;
+	padding: 10px;
+	flex-shrink: 1;
+	width:100px;
 }
 </style>

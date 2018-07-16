@@ -1,0 +1,1 @@
+webpackHotUpdate(0,{9:function(e,t,s){"use strict";var i={data:()=>({topmenus:[],sidemenus:[],activeMenuId:0}),computed:{sideMenus(){this.Axios.get(`/api/common/side_menus/${this.activeMenuId}`).then(e=>{this.sidemenus=e.data})}},mounted(){this.Axios.get("/api/common/top_menus").then(e=>{this.topmenus=e.data})}};t.a=i}});
